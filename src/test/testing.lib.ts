@@ -1,10 +1,29 @@
+import { Task } from './../model/task.model';
+import { KanbanStatus } from './../model/kanban-status.model';
+import { UUIDType } from './../service/uuid.service';
 import { PasswordService } from './../service/password.service';
 import { Env } from '../constant/env.constant';
 import { User } from '../model/user.model';
 import { DBService } from './../service/db.service';
+import { Kanban } from '../model/kanban.model';
+import { UserKanban } from '../model/user-kanban.model';
+
 export class TestingLib {
-  static readonly TEST_USER = 'testing';
-  static readonly NOT_EXISTED_TEST_USER = 'not_existed';
+  static readonly TEST_USER = UUIDType.User + 'testing';
+  static readonly NOT_EXISTED_TEST_USER = UUIDType.User + 'not_existed';
+
+  static readonly TEST_KANBAN = UUIDType.Kanban + 'testing';
+  static readonly NOT_EXISTED_TEST_KANBAN = UUIDType.Kanban + 'not_existed';
+
+  static readonly TEST_KANBAN_STATUS: { id: string; name: string }[] = [
+    { id: UUIDType.KanbanStatus + 'testing1', name: 'Backlog' },
+    { id: UUIDType.KanbanStatus + 'testing2', name: 'To Do' },
+    { id: UUIDType.KanbanStatus + 'testing3', name: 'Ongoing' },
+    { id: UUIDType.KanbanStatus + 'testing4', name: 'Done' }
+  ];
+
+  static readonly TEST_TASK = UUIDType.Task + 'testing';
+  static readonly NOT_EXISTED_TEST_TASK = UUIDType.Task + 'not_existed';
 
   static async connectToDB() {
     await DBService.getInstance().init({
@@ -35,7 +54,66 @@ export class TestingLib {
       });
   }
 
+  static async createTestKanban() {
+    await TestingLib.createTestUser();
+
+    await DBService.getInstance().getConnection().getRepository(Kanban).insert({
+      id: TestingLib.TEST_KANBAN,
+      name: TestingLib.TEST_KANBAN
+    });
+
+    for (let i = 0; i < TestingLib.TEST_KANBAN_STATUS.length; i++) {
+      await DBService.getInstance()
+        .getConnection()
+        .getRepository(KanbanStatus)
+        .insert({
+          ...TestingLib.TEST_KANBAN_STATUS[i],
+          order: i,
+          kanbanId: TestingLib.TEST_KANBAN
+        });
+    }
+
+    await DBService.getInstance().getConnection().getRepository(UserKanban).insert({
+      kanbanId: TestingLib.TEST_KANBAN,
+      userId: TestingLib.TEST_USER,
+      type: 'admin'
+    });
+  }
+
+  static async createTestTask() {
+    await TestingLib.createTestKanban();
+    await DBService.getInstance().getConnection().getRepository(Task).insert({
+      id: TestingLib.TEST_TASK,
+      name: TestingLib.TEST_TASK,
+      status: TestingLib.TEST_KANBAN_STATUS[0].id,
+      lastModified: TestingLib.TEST_USER,
+      kanbanId: TestingLib.TEST_KANBAN
+    });
+  }
+
+  static async deleteTestTask() {
+    await DBService.getInstance().getConnection().getRepository(Task).delete({
+      lastModified: TestingLib.TEST_USER
+    });
+  }
+
+  static async deleteTestKanban() {
+    await TestingLib.deleteTestTask();
+    await DBService.getInstance()
+      .getConnection()
+      .getRepository(UserKanban)
+      .delete({ kanbanId: TestingLib.TEST_KANBAN });
+
+    await DBService.getInstance()
+      .getConnection()
+      .getRepository(KanbanStatus)
+      .delete({ kanbanId: TestingLib.TEST_KANBAN });
+
+    await DBService.getInstance().getConnection().getRepository(Kanban).delete({ id: TestingLib.TEST_KANBAN });
+  }
+
   static async deleteTestUser() {
+    await TestingLib.deleteTestKanban();
     await DBService.getInstance().getConnection().getRepository(User).delete({
       id: TestingLib.TEST_USER
     });
