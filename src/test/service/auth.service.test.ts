@@ -17,8 +17,8 @@ describe('Test AuthService', () => {
 
     test('happy path', async () => {
       const info = await AuthService.login(TestingLib.TEST_USER, TestingLib.TEST_USER);
-      expect(info.id).toBe(TestingLib.TEST_USER);
-      expect(info.username).toBe(TestingLib.TEST_USER);
+      expect(info.user.id).toBe(TestingLib.TEST_USER);
+      expect(info.user.username).toBe(TestingLib.TEST_USER);
       const jwtInfo: any = jwt.verify(info.token, Env.JWT_SECRET);
       expect(jwtInfo.sub).toBe(TestingLib.TEST_USER);
     });

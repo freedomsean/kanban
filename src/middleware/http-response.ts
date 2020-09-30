@@ -61,9 +61,9 @@ export class HttpSuccessResponse extends HttpResponse {
  * For 422.
  */
 export class HttpUnprocessableEntityResponse extends HttpResponse {
-  errors: { msg: string; param: string }[];
+  errors: any[];
 
-  constructor(errors: { msg: string; param: string }[]) {
+  constructor(errors: any[]) {
     super(HttpStatusCode.UNPROCESSABLE_ENTITY);
     this.errors = errors;
   }
@@ -91,6 +91,23 @@ export class HttpUnauthorizedResponse extends HttpResponse {
 
   getData() {
     return 'UNAUTHORIZED';
+  }
+}
+
+/**
+ * For 404.
+ */
+export class HttpNotFoundResponse extends HttpResponse {
+  constructor() {
+    super(HttpStatusCode.NOT_FOUND);
+  }
+
+  toJson() {
+    return this.errorResponse();
+  }
+
+  getData() {
+    return 'NOT_FOUND';
   }
 }
 
