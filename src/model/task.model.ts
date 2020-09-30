@@ -18,13 +18,13 @@ export class Task extends BaseEntity {
 
   @ManyToOne((type) => User, (user) => user.tasks)
   @JoinColumn({ name: 'last_modified' })
-  @Column({ length: 38, nullable: false })
-  lastModified: User;
+  @Column({ type: 'varchar', length: 38, nullable: false })
+  lastModified: string;
 
   @ManyToOne((type) => KanbanStatus, (status) => status.tasks)
   @JoinColumn({ name: 'status' })
   @Column({ type: 'varchar', length: 38, nullable: false })
-  status: KanbanStatus;
+  status: string;
 
   @Column({ type: 'boolean', nullable: false, default: false })
   isDeleted: boolean;

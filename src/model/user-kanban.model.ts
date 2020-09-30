@@ -10,7 +10,7 @@ export class UserKanban extends BaseEntity {
   @PrimaryColumn({ length: 38 })
   kanbanId: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', length: 5 })
   type: 'admin' | 'user';
 
   @Column({ type: 'boolean', nullable: false, default: false })
