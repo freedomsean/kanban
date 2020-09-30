@@ -1,19 +1,15 @@
 import { UserKanban } from './user-kanban.model';
+import { KanbanStatus } from './kanban-status.model';
 import { Task } from './task.model';
 import { BaseEntity, Column, Entity, PrimaryColumn, OneToMany } from 'typeorm';
-import { Exclude } from 'class-transformer';
 
-@Entity('users')
-export class User extends BaseEntity {
+@Entity('kanbans')
+export class Kanban extends BaseEntity {
   @PrimaryColumn({ length: 38 })
   id: string;
 
   @Column({ length: 50, unique: true, nullable: false })
-  username: string;
-
-  @Exclude()
-  @Column({ length: 60, nullable: false })
-  password: string;
+  name: string;
 
   @Column({ type: 'boolean', nullable: false, default: false })
   isDeleted: boolean;
@@ -24,9 +20,12 @@ export class User extends BaseEntity {
   @Column({ type: 'timestamp', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
-  @OneToMany((type) => Task, (task) => task.lastModified)
+  @OneToMany((type) => Task, (task) => task.kanbanId)
   tasks: Task[];
 
-  @OneToMany((type) => UserKanban, (userKanban) => userKanban.user)
+  @OneToMany((type) => KanbanStatus, (status) => status.kanbanId)
+  statuses: KanbanStatus[];
+
+  @OneToMany((type) => UserKanban, (userKanban) => userKanban.kanban)
   usersKanbans: UserKanban[];
 }

@@ -1,3 +1,7 @@
+import { UserKanban } from './../model/user-kanban.model';
+import { KanbanStatus } from './../model/kanban-status.model';
+import { Task } from './../model/task.model';
+import { Kanban } from './../model/kanban.model';
 import { createConnection, Connection } from 'typeorm';
 import { User } from '../model/user.model';
 
@@ -66,7 +70,7 @@ export class DBService {
       password: config.password,
       database: config.usedDatabase,
       synchronize: config.needToSync,
-      entities: [User],
+      entities: [User, Kanban, Task, KanbanStatus, UserKanban],
       extra: {
         max: config.poolSize, // For pg.
         connectionLimit: config.poolSize // Fo mysql.
