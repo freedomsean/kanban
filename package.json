@@ -12,7 +12,13 @@
     "test": "npx jest --runInBand --config jest.config.json",
     "test:ci": "npx jest --runInBand --config jest.config.json",
     "presync": "npm run build",
-    "sync": "npx typeorm schema:sync --config dist/ormconfig.js"
+    "sync": "npx typeorm schema:sync --config dist/ormconfig.js",
+    "prestart": "npm run build",
+    "start": "node dist/app.js",
+    "preseed:up": "npm run build",
+    "seed:up": "node dist/seed.js up",
+    "preseed:down": "npm run build",
+    "seed:down": "node dist/seed.js down"
   },
   "files": [
     "dist/**/*"
