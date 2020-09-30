@@ -75,3 +75,7 @@ npm run test
 - Build typescript: `npm run build`
 - Lint and fix: `npm run lint`
 - Sync database schema: `npm run sync`
+
+## API document
+
+- Swagger yml: `docs/api.yml`

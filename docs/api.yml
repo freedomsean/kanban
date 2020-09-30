@@ -1,0 +1,106 @@
+openapi: 3.0.0
+info:
+  title: Swype Customer Backend
+  description: Swype Customer Backend
+  version: "1.0.0-oas3"
+tags:
+  - name: auth
+    description: 'auth'
+paths:
+  /auth/login:
+    post:
+      operationId: login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthDto'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+ 
+        '422':
+          description: Unprocessible Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntityResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        '500':
+          description: Internal Server Error
+      tags:
+        - auth
+components:
+  securitySchemes:
+    basic:
+      type: http
+      scheme: basic
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    AuthDto:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    BearerToken:
+      type: string
+      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlUxYWEyZTY4ZS0wOGNkLTQzY2ItYTZmOC0xZTk1MWUzMWQ4MzUiLCJ1c2VybmFtZSI6InN0YW5sZXlob3lwIiwicm9sZUlkIjozLCJpYXQiOjE1NzUzNDEzMTIsImV4cCI6MTYxMTM0MTMxMiwi
+    UnauthorizedResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: UNAUTHORIZED
+    UnprocessableEntityResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            validateErrors:
+              $ref: '#/components/schemas/UnprocessableErrorDetails'
+    UnprocessableErrorDetails:
+      type: object
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          $ref: '#/components/schemas/BearerToken'
+        tokenType:
+          type: string
+          example: Bearer
+        user:
+          $ref: '#/components/schemas/LoginUser'
+    LoginUser:
+      type: object
+      properties:
+        id:
+          type: string
+          example: CUfe68d06f-1bd6-497b-bfe4-b8b344fb4f9e
+        username:
+          type: string
+          example: user1
+      
+# Added by API Auto Mocking Plugin
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/swype-cbnest/cbnest/1.0.0-oas3
