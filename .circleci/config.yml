@@ -1,0 +1,45 @@
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.5
+jobs:
+  build:
+    working_directory: /etc/app
+    docker:
+      - image: centos:7
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install dependencies
+          command: |
+            curl -fsSL https://get.docker.com -o get-docker.sh &&  sh get-docker.sh   &&  mkdir -p /etc/app/coverage &&  curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+      - run:
+          name: Build application Docker image
+          command: |
+            docker build -t app .
+      - run:
+          name: Set Fluentd config
+          command: |
+            echo "<source>\n\t@type forward\n\tbind 0.0.0.0\n\tport 24224\n\t<security>\n\t\tself_hostname input.testing.local\n\t\tshared_key secure_communication_is_awesome\n\t</security>\n</source>\n\n<match ___specialcustomtesttag>\n\t@type stdout\n</match>" > fluentd/fluent.conf
+      - run:
+          name: Run dependencies
+          command: |
+            docker-compose up -d
+      - run:
+          name: Run testing
+          command: |
+            docker run -it --name app --net app_default  --link app_db_1:db --link app_fluentd_1:fluentd -e NODE_ENV=dev -e HTTP_SERVER_PORT=3000 -e DB_DIALECT=postgres -e DB_HOST=db -e DB_PORT=5432 -e DB_USER=postgres -e DB_PASSWORD=testing -e DB_USED_DATABASE=oneconnector -e DB_POOL_MAX_CONNECTION=10 -e DB_SYNC=true -e JWT_SECRET=sdfgefdfgfdfg -e SALT_ROUNDS=10 -e JWT_EXPIRES_IN=7d -e FLUENTD_HOST=fluentd -e FLUENTD_PORT=24224 -e FLUENTD_TIMEOUT=1 -e FLUENTD_SHARED_KEY=secure_communication_is_awesome -e FLUENTD_TAG=___specialcustomtesttag app
+      - run:
+          name: Copy coverage
+          command: |
+            docker cp app:/etc/app/coverage /etc/app/coverage
+      - store_artifacts:
+          path: /etc/app/coverage
+          destination: coverage
+      - run:
+          name: Upload Coverage Results
+          command: |
+            curl -s https://codecov.io/bash | bash -s -- \
+              -t "${CODE_COV_TOKEN}" \
+              -p "/etc/app/coverage" \
+              -Z || echo 'Codecov upload failed'

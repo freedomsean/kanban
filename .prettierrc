@@ -1,0 +1,12 @@
+{
+  "arrowParens": "always",
+  "trailingComma": "none",
+  "endOfLine": "auto",
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 120,
+  "proseWrap": "preserve",
+  "useTabs": false,
+  "tabWidth": 2,
+  "parser": "typescript"
+}

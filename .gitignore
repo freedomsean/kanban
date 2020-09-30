@@ -1,0 +1,7 @@
+node_modules
+.nyc_output
+dist
+ssh-key
+coverage
+testdata
+.env
