@@ -2,7 +2,6 @@ import { LoginInfoError } from '../exception/auth.exception';
 import { PasswordService } from './password.service';
 import { UserRepository } from '../repository/user.repository';
 import { PassportService } from './passport.service';
-import { TOKEN_TYPE_BEARER } from '../constant/login.constant';
 
 export class AuthService {
   /**
@@ -14,7 +13,7 @@ export class AuthService {
   static async login(
     username: string,
     password: string
-  ): Promise<{ user: { id: string; username: string }; tokenType: string; token: string }> {
+  ): Promise<{ user: { id: string; username: string }; token: string }> {
     const user = await UserRepository.getUserByUsername(username);
     if (!user || !PasswordService.compareSecureHash(password, user.password)) {
       throw new LoginInfoError();
@@ -25,7 +24,6 @@ export class AuthService {
         id: user.id,
         username
       },
-      tokenType: TOKEN_TYPE_BEARER,
       token: PassportService.sign({ id: user.id, username })
     };
   }
