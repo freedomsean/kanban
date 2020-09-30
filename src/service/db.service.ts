@@ -4,6 +4,7 @@ import { Task } from './../model/task.model';
 import { Kanban } from './../model/kanban.model';
 import { createConnection, Connection } from 'typeorm';
 import { User } from '../model/user.model';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 export interface DBConfig {
   dialect: string;
@@ -70,7 +71,9 @@ export class DBService {
       password: config.password,
       database: config.usedDatabase,
       synchronize: config.needToSync,
+      namingStrategy: new SnakeNamingStrategy(),
       entities: [User, Kanban, Task, KanbanStatus, UserKanban],
+      logging: false,
       extra: {
         max: config.poolSize, // For pg.
         connectionLimit: config.poolSize // Fo mysql.
