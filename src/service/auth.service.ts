@@ -13,7 +13,10 @@ export class AuthService {
   static async login(
     username: string,
     password: string
-  ): Promise<{ user: { id: string; username: string }; token: string }> {
+  ): Promise<{
+    user: { id: string; username: string; defaultKanbanId: string; kanbans: { id: string }[] };
+    token: string;
+  }> {
     const user = await UserRepository.getUserByUsername(username);
     if (!user || !PasswordService.compareSecureHash(password, user.password)) {
       throw new LoginInfoError();
@@ -22,7 +25,16 @@ export class AuthService {
     return {
       user: {
         id: user.id,
-        username
+        defaultKanbanId: user.defaultKanbanId,
+        username,
+        kanbans: user.usersKanbans
+          // Filter at there, because I want to avoid from using raw sql in this project. Actually, using raw sql will be easier to control, but it will lost consistency.
+          .filter((info) => !info.isDeleted)
+          .map((info) => {
+            return {
+              id: info.kanbanId
+            };
+          })
       },
       token: PassportService.sign({ id: user.id, username })
     };

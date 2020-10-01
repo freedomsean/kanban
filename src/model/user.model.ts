@@ -1,7 +1,8 @@
 import { UserKanban } from './user-kanban.model';
 import { Task } from './task.model';
-import { BaseEntity, Column, Entity, PrimaryColumn, OneToMany } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryColumn, OneToMany, ManyToOne } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { Kanban } from './kanban.model';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -14,6 +15,10 @@ export class User extends BaseEntity {
   @Exclude()
   @Column({ length: 60, nullable: false })
   password: string;
+
+  @ManyToOne((type) => Kanban, (kanban) => kanban.users)
+  @Column({ type: 'varchar', length: 38, nullable: true })
+  public defaultKanbanId: string;
 
   @Column({ type: 'boolean', nullable: false, default: false })
   isDeleted: boolean;

@@ -10,7 +10,7 @@ describe('Test Auth API', () => {
   let main: { app: any; server: any };
   beforeEach(async () => {
     await TestingLib.connectToDB();
-    await TestingLib.createTestUser();
+    await TestingLib.createTestKanban();
     main = await ApiTestingLib.startHttpServer();
   });
 
@@ -33,7 +33,9 @@ describe('Test Auth API', () => {
         .expect(HttpStatusCode.OK);
       expect(testing.body.data.user.id).toBe(TestingLib.TEST_USER);
       expect(testing.body.data.user.username).toBe(TestingLib.TEST_USER);
-
+      expect(testing.body.data.user.defaultKanbanId).toBe(TestingLib.TEST_KANBAN);
+      expect(Array.isArray(testing.body.data.user.kanbans)).toBeTruthy();
+      expect(testing.body.data.user.kanbans[0].id).toBe(TestingLib.TEST_KANBAN);
       const jwtInfo: any = jwt.verify(testing.body.data.token, Env.JWT_SECRET);
       expect(jwtInfo.sub).toBe(TestingLib.TEST_USER);
     });

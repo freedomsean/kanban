@@ -1,3 +1,4 @@
+import { User } from './user.model';
 import { UserKanban } from './user-kanban.model';
 import { KanbanStatus } from './kanban-status.model';
 import { Task } from './task.model';
@@ -28,4 +29,7 @@ export class Kanban extends BaseEntity {
 
   @OneToMany((type) => UserKanban, (userKanban) => userKanban.kanban)
   usersKanbans: UserKanban[];
+
+  @OneToMany((type) => User, (user) => user.defaultKanbanId)
+  users: User[];
 }

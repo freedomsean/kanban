@@ -58,6 +58,26 @@ export class HttpSuccessResponse extends HttpResponse {
 }
 
 /**
+ * For 409.
+ */
+export class HttpConflictResponse extends HttpResponse {
+  error: any;
+
+  constructor(error: any) {
+    super(HttpStatusCode.CONFLICT);
+    this.error = error;
+  }
+
+  toJson() {
+    return this.errorResponse();
+  }
+
+  getData() {
+    return this.error;
+  }
+}
+
+/**
  * For 422.
  */
 export class HttpUnprocessableEntityResponse extends HttpResponse {
@@ -91,6 +111,23 @@ export class HttpUnauthorizedResponse extends HttpResponse {
 
   getData() {
     return 'UNAUTHORIZED';
+  }
+}
+
+/**
+ * For 401.
+ */
+export class HttpForbiddenResponse extends HttpResponse {
+  constructor() {
+    super(HttpStatusCode.FORBIDDEN);
+  }
+
+  toJson() {
+    return this.errorResponse();
+  }
+
+  getData() {
+    return 'FOBIDDEN';
   }
 }
 

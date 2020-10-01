@@ -12,11 +12,12 @@ export class UserRepository {
       .getConnection()
       .getRepository(User)
       .findOne({
-        select: ['id', 'password'],
+        select: ['id', 'password', 'defaultKanbanId'],
         where: {
           isDeleted: false,
           username
-        }
+        },
+        relations: ['usersKanbans']
       });
 
     return user;

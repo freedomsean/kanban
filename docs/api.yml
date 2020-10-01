@@ -61,7 +61,7 @@ components:
       required:
         - username
         - password
-    BearerToken:
+    Token:
       type: string
       example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IlUxYWEyZTY4ZS0wOGNkLTQzY2ItYTZmOC0xZTk1MWUzMWQ4MzUiLCJ1c2VybmFtZSI6InN0YW5sZXlob3lwIiwicm9sZUlkIjozLCJpYXQiOjE1NzUzNDEzMTIsImV4cCI6MTYxMTM0MTMxMiwi
     UnauthorizedResponse:
@@ -84,10 +84,12 @@ components:
       type: object
       properties:
         token:
-          $ref: '#/components/schemas/BearerToken'
-        tokenType:
+          $ref: '#/components/schemas/Token'
+        defaultKanbanId:
           type: string
-          example: Bearer
+          example: KAfe68d06f-1bd6-497b-bfe4-b8b344fb4f9e
+        kanbans:
+          $ref: '#/components/schemas/Kanbans'
         user:
           $ref: '#/components/schemas/LoginUser'
     LoginUser:
@@ -95,10 +97,20 @@ components:
       properties:
         id:
           type: string
-          example: CUfe68d06f-1bd6-497b-bfe4-b8b344fb4f9e
+          example: USfe68d06f-1bd6-497b-bfe4-b8b344fb4f9e
         username:
           type: string
           example: user1
+    Kanbans:
+      type: array
+      items:
+        $ref: '#/components/schemas/Kanban'
+    Kanban:
+      type: object
+      properties:
+        id:
+          type: string
+          example: KAfe68d06f-1bd6-497b-bfe4-b8b344fb4f9e
       
 # Added by API Auto Mocking Plugin
 servers:

@@ -7,7 +7,7 @@ describe('Test AuthService', () => {
   describe('Test login', () => {
     beforeEach(async () => {
       await TestingLib.connectToDB();
-      await TestingLib.createTestUser();
+      await TestingLib.createTestKanban();
     });
 
     afterEach(async () => {
@@ -19,6 +19,9 @@ describe('Test AuthService', () => {
       const info = await AuthService.login(TestingLib.TEST_USER, TestingLib.TEST_USER);
       expect(info.user.id).toBe(TestingLib.TEST_USER);
       expect(info.user.username).toBe(TestingLib.TEST_USER);
+      expect(info.user!.defaultKanbanId).toBe(TestingLib.TEST_KANBAN);
+      expect(Array.isArray(info.user!.kanbans)).toBeTruthy();
+      expect(info.user!.kanbans[0].id).toBe(TestingLib.TEST_KANBAN);
       const jwtInfo: any = jwt.verify(info.token, Env.JWT_SECRET);
       expect(jwtInfo.sub).toBe(TestingLib.TEST_USER);
     });
