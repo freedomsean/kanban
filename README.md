@@ -1,5 +1,9 @@
 # Kanban board
 
+[![CircleCI](https://circleci.com/gh/freedomsean/kanban.svg?style=svg)](https://circleci.com/gh/freedomsean/kanban)
+[![codecov](https://codecov.io/gh/freedomsean/kanban/branch/master/graph/badge.svg?token=ETY5YGMT25)](https://codecov.io/gh/freedomsean/kanban/)
+
+
 This is a Kanban board example which is developed by NodeJS and Typescript.
 
 ## How to Start
