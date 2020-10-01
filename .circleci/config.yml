@@ -16,7 +16,7 @@ jobs:
       - run:
           name: Build application Docker image
           command: |
-            docker build -t app .
+            docker build -f Dockerfile.testing -t app .
       - run:
           name: Set Fluentd config
           command: |

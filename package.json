@@ -18,7 +18,8 @@
     "preseed:up": "npm run build",
     "seed:up": "node dist/seed.js up",
     "preseed:down": "npm run build",
-    "seed:down": "node dist/seed.js down"
+    "seed:down": "node dist/seed.js down",
+    "start:cloud": "npx pm2-docker start ecosystem.config.js"
   },
   "files": [
     "dist/**/*"
