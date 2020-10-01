@@ -52,6 +52,7 @@ PassportService.config(passport);
 
 // V1 Routers.
 app.use('/v1', v1);
+app.use('/docs', express.static('static'));
 
 // To process all response.
 app.use(ErrorHandler);
