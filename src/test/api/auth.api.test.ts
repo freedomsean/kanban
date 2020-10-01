@@ -1,3 +1,4 @@
+import { TOKEN_TYPE_BEARER } from './../../constant/token.constant';
 import * as jwt from 'jsonwebtoken';
 import * as supertest from 'supertest';
 
@@ -20,7 +21,7 @@ describe('Test Auth API', () => {
     await TestingLib.closeDBConnection();
   });
 
-  describe('Test /v1/auth/login', () => {
+  describe('Test POST /v1/auth/login', () => {
     const END_POINT = '/v1/auth/login';
 
     test('happy path', async () => {
@@ -36,6 +37,7 @@ describe('Test Auth API', () => {
       expect(testing.body.data.user.defaultKanbanId).toBe(TestingLib.TEST_KANBAN);
       expect(Array.isArray(testing.body.data.user.kanbans)).toBeTruthy();
       expect(testing.body.data.user.kanbans[0].id).toBe(TestingLib.TEST_KANBAN);
+      expect(testing.body.data.tokenType).toBe(TOKEN_TYPE_BEARER);
       const jwtInfo: any = jwt.verify(testing.body.data.token, Env.JWT_SECRET);
       expect(jwtInfo.sub).toBe(TestingLib.TEST_USER);
     });

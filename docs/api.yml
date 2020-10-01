@@ -85,6 +85,9 @@ components:
       properties:
         token:
           $ref: '#/components/schemas/Token'
+        tokenType:
+            type: string
+            example: Bearer
         defaultKanbanId:
           type: string
           example: KAfe68d06f-1bd6-497b-bfe4-b8b344fb4f9e

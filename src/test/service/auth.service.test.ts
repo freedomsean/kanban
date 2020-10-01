@@ -1,3 +1,4 @@
+import { TOKEN_TYPE_BEARER } from './../../constant/token.constant';
 import { AuthService } from '../../service/auth.service';
 import { TestingLib } from '../testing.lib';
 import * as jwt from 'jsonwebtoken';
@@ -24,6 +25,7 @@ describe('Test AuthService', () => {
       expect(info.user!.kanbans[0].id).toBe(TestingLib.TEST_KANBAN);
       const jwtInfo: any = jwt.verify(info.token, Env.JWT_SECRET);
       expect(jwtInfo.sub).toBe(TestingLib.TEST_USER);
+      expect(info.tokenType).toBe(TOKEN_TYPE_BEARER);
     });
   });
 });

@@ -1,3 +1,4 @@
+import { TOKEN_TYPE_BEARER } from './../constant/token.constant';
 import { LoginInfoError } from '../exception/auth.exception';
 import { PasswordService } from './password.service';
 import { UserRepository } from '../repository/user.repository';
@@ -16,6 +17,7 @@ export class AuthService {
   ): Promise<{
     user: { id: string; username: string; defaultKanbanId: string; kanbans: { id: string }[] };
     token: string;
+    tokenType: string;
   }> {
     const user = await UserRepository.getUserByUsername(username);
     if (!user || !PasswordService.compareSecureHash(password, user.password)) {
@@ -36,6 +38,7 @@ export class AuthService {
             };
           })
       },
+      tokenType: TOKEN_TYPE_BEARER,
       token: PassportService.sign({ id: user.id, username })
     };
   }
