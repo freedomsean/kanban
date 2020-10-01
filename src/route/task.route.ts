@@ -1,14 +1,13 @@
 import { TaskController } from '../controller/task.controller';
 import { CreateTaskRequiredField } from '../constant/api-required-field.constant';
 import { AuthMiddleware } from '../middleware/auth.middleware';
-import { AuthController } from '../controller/auth.controller';
 import { Router } from 'express';
 import { ValidateBodyMiddleware } from '../middleware/validate-body.middleware';
 
 const task: Router = Router();
 
 task.put('/:id/:direction(backward|forward)', AuthMiddleware, TaskController.moveTask);
-task.delete('/:id', AuthMiddleware, AuthController.login);
+task.delete('/:id', AuthMiddleware, TaskController.deleteTask);
 task.post(
   '/',
   AuthMiddleware,

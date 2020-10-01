@@ -65,4 +65,26 @@ export class TaskController {
       next(new HttpSystemErrorResponse(error.toString()));
     }
   }
+
+  static async deleteTask(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const userId = req.user!.id;
+
+    try {
+      const info = await TaskService.deleteTask(id, userId);
+      next(new HttpSuccessResponse(info, HttpStatusCode.NO_CONTENT));
+    } catch (error) {
+      if (error instanceof TaskPermissionDeniedError) {
+        next(new HttpForbiddenResponse());
+        return;
+      }
+
+      if (error instanceof TaskNotExistError) {
+        next(new HttpNotFoundResponse());
+        return;
+      }
+
+      next(new HttpSystemErrorResponse(error.toString()));
+    }
+  }
 }

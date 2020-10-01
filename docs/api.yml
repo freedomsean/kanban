@@ -107,7 +107,7 @@ paths:
             enum: [forward, backward]
             example: forward
       responses:
-        '200':
+        '201':
           description: Created
           content:
             application/json:
@@ -131,6 +131,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConflictResponse'
+        '500':
+          description: Internal Server Error
+      tags:
+        - tasks
+  /v1/tasks/{id}:
+    delete:
+      security:
+        - BearerAuth: []
+      operationId: deleteTask
+      parameters:
+        - name: id
+          in: path
+          description: task id
+          required: true
+          schema:
+            type: string
+            example: TAtesting
+      responses:
+        '204':
+          description: Success
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
         '500':
           description: Internal Server Error
       tags:
