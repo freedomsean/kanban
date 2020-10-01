@@ -1,10 +1,10 @@
 import { v4 } from 'uuid';
 
 export enum UUIDType {
-  User = 'US',
-  Kanban = 'KA',
-  Task = 'TA',
-  KanbanStatus = 'KS'
+  USER = 'US',
+  KANBAN = 'KA',
+  TASK = 'TA',
+  KANBANSTATUS = 'KS'
 }
 
 export class UUIDService {
