@@ -26,7 +26,7 @@ describe('Test Task API', () => {
 
   describe('Test DELETE /v1/tasks/:id', () => {
     const END_POINT = `/v1/tasks/${TestingLib.TEST_TASK}`;
-    test(' happy path', async () => {
+    test('happy path', async () => {
       await supertest(main.app)
         .delete(END_POINT)
         .set('Authorization', TOKEN_TYPE_BEARER + ' ' + token)

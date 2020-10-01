@@ -38,4 +38,14 @@ export class TaskService {
   static async deleteTask(id: string, userId: string) {
     await TaskRepository.deleteTask(id, userId);
   }
+
+  /**
+   * Get tasks by kanban id.
+   *
+   * @param {string} kanbanId - Kanban id.
+   * @param {string} userId - User id.
+   */
+  static async getTasksByKanbanId(kanbanId: string, userId: string): Promise<Task[]> {
+    return await TaskRepository.getTasksByKanbanId(kanbanId, userId);
+  }
 }

@@ -212,4 +212,32 @@ export class TaskRepository {
       }
     );
   }
+
+  /**
+   * Get tasks by kanban id.
+   *
+   * @param {string} kanbanId - Kanban id.
+   * @param {string} userId - User id.
+   */
+  static async getTasksByKanbanId(kanbanId: string, userId: string): Promise<Task[]> {
+    const userKanban = await TaskRepository.checkUserKanbanRelation(userId, kanbanId);
+    if (!userKanban) {
+      throw new TaskPermissionDeniedError();
+    }
+
+    const tasks = await DBService.getInstance()
+      .getConnection()
+      .getRepository(Task)
+      .find({
+        select: ['id', 'name', 'status'],
+        where: {
+          isDeleted: false
+        },
+        order: {
+          id: 'ASC'
+        }
+      });
+
+    return tasks;
+  }
 }

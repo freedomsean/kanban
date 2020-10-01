@@ -8,6 +8,8 @@ tags:
     description: 'auth'
   - name: tasks
     description: 'tasks'
+  - name: kanbans
+    description: 'kanbans'
 paths:
   /v1/auth/login:
     post:
@@ -167,6 +169,78 @@ paths:
           description: Internal Server Error
       tags:
         - tasks
+  /v1/kanbans/{id}/tasks:
+    get:
+      security:
+        - BearerAuth: []
+      operationId: getTasksByKanbanId
+      parameters:
+        - name: id
+          in: path
+          description: kanban id
+          required: true
+          schema:
+            type: string
+            example: KAtesting
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTasksResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+        '500':
+          description: Internal Server Error
+      tags:
+        - kanbans
+  /v1/kanbans/{id}/statuses:
+    get:
+      security:
+        - BearerAuth: []
+      operationId: getStatusesByKanbanId
+      parameters:
+        - name: id
+          in: path
+          description: kanban id
+          required: true
+          schema:
+            type: string
+            example: KAtesting
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTasksResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+        '500':
+          description: Internal Server Error
+      tags:
+        - kanbans
 components:
   securitySchemes:
     BearerAuth:            
@@ -294,6 +368,54 @@ components:
           type: string
           description: new status name
           example: 'KSnew'
+    GetTasksResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetTasksResponseInData'
+    GetTasksResponseInData:
+      type: array
+      items:
+        $ref: '#/components/schemas/GetTasksResponseInDataArray'
+    GetTasksResponseInDataArray:
+      type: object
+      properties:
+        id: 
+          type: string
+          description: task id
+          example: 'TA9ad1e11c-25b9-471c-bbfc-b525a26313f5'
+        name:  
+          type: string
+          description: task name
+          example: 'TAnew'
+        status:
+          type: string
+          description: status id
+          example: 'TSnew'
+    GetStatusesResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetStatusesResponseInData'
+    GetStatusesResponseInData:
+      type: array
+      items:
+        $ref: '#/components/schemas/GetStatusesResponseInDataArray'
+    GetStatusesResponseInDataArray:
+      type: object
+      properties:
+        id: 
+          type: string
+          description: status id
+          example: 'KS9ad1e11c-25b9-471c-bbfc-b525a26313f5'
+        name:  
+          type: string
+          description: status name
+          example: 'KSnew'
+        order:
+          type: number
+          description: status order
+          example: 1
     LoginUser:
       type: object
       properties:

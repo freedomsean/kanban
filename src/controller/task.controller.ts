@@ -87,4 +87,21 @@ export class TaskController {
       next(new HttpSystemErrorResponse(error.toString()));
     }
   }
+
+  static async getTasksByKanbanId(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+    const userId = req.user!.id;
+
+    try {
+      const info = await TaskService.getTasksByKanbanId(id, userId);
+      next(new HttpSuccessResponse(info, HttpStatusCode.OK));
+    } catch (error) {
+      if (error instanceof TaskPermissionDeniedError) {
+        next(new HttpForbiddenResponse());
+        return;
+      }
+
+      next(new HttpSystemErrorResponse(error.toString()));
+    }
+  }
 }

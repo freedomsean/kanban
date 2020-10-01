@@ -156,4 +156,29 @@ describe('Test TaskRepository', () => {
       ).rejects.toThrowError(TaskPermissionDeniedError);
     });
   });
+
+  describe('Test getTasksByKanbanId', () => {
+    beforeEach(async () => {
+      await TestingLib.connectToDB();
+      await TestingLib.createTestTask();
+    });
+
+    afterEach(async () => {
+      await TestingLib.deleteTestUser();
+      await TestingLib.closeDBConnection();
+    });
+
+    test('happy path', async () => {
+      const tasks = await TaskRepository.getTasksByKanbanId(TestingLib.TEST_KANBAN, TestingLib.TEST_USER);
+      expect(tasks[0].id).toBe(TestingLib.TEST_TASK);
+      expect(tasks[0].name).toBe(TestingLib.TEST_TASK);
+      expect(tasks[0].status).toBe(TestingLib.TEST_KANBAN_STATUS[0].id);
+    });
+
+    test('permission denied', async () => {
+      await expect(
+        TaskRepository.getTasksByKanbanId(TestingLib.TEST_KANBAN, TestingLib.NOT_EXISTED_TEST_USER)
+      ).rejects.toThrowError(TaskPermissionDeniedError);
+    });
+  });
 });
