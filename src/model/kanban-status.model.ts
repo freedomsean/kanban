@@ -3,7 +3,7 @@ import { Kanban } from './kanban.model';
 import { BaseEntity, Column, Entity, PrimaryColumn, ManyToOne, JoinColumn, OneToMany, Unique } from 'typeorm';
 import { User } from './user.model';
 
-@Entity('kanban_statuses')
+@Entity('kanbans_statuses')
 @Unique('order_kanban_id', ['order', 'kanbanId'])
 @Unique('name_kanban_id', ['name', 'kanbanId'])
 export class KanbanStatus extends BaseEntity {
