@@ -39,15 +39,13 @@ describe('Test Task API', () => {
       expect(testing.body.data.name).toBe(TestingLib.TEST_NEW_TASK);
       expect(testing.body.data.lastModified).toBe(TestingLib.TEST_USER);
 
-      console.log(testing.body);
-
       const task = await DBService.getInstance().getConnection().getRepository(Task).findOne({
         name: TestingLib.TEST_NEW_TASK
       });
       expect(task).toBeTruthy();
     });
 
-    test('happy path', async () => {
+    test('forbidden', async () => {
       await supertest(main.app)
         .post(END_POINT)
         .set('Authorization', TOKEN_TYPE_BEARER + ' ' + token)

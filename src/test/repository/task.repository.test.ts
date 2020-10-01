@@ -107,34 +107,14 @@ describe('Test TaskRepository', () => {
     });
 
     test('failed to move forward, because no any next order exists', async () => {
-      await DBService.getInstance()
-        .getConnection()
-        .getRepository(Task)
-        .update(
-          {
-            id: TestingLib.TEST_TASK
-          },
-          {
-            status: TestingLib.TEST_KANBAN_STATUS[TestingLib.TEST_KANBAN_STATUS.length - 1].id
-          }
-        );
+      await TestingLib.changeTaskStatus(TestingLib.TEST_KANBAN_STATUS.length - 1);
       await expect(TaskRepository.moveTask(TestingLib.TEST_TASK, 'forward', TestingLib.TEST_USER)).rejects.toThrowError(
         TaskCannotForwardError
       );
     });
 
     test('move backward happy path', async () => {
-      await DBService.getInstance()
-        .getConnection()
-        .getRepository(Task)
-        .update(
-          {
-            id: TestingLib.TEST_TASK
-          },
-          {
-            status: TestingLib.TEST_KANBAN_STATUS[TestingLib.TEST_KANBAN_STATUS.length - 1].id
-          }
-        );
+      await TestingLib.changeTaskStatus(TestingLib.TEST_KANBAN_STATUS.length - 1);
       const result = await TaskRepository.moveTask(TestingLib.TEST_TASK, 'backward', TestingLib.TEST_USER);
       expect(result!.id).toBe(TestingLib.TEST_KANBAN_STATUS[TestingLib.TEST_KANBAN_STATUS.length - 2].id);
       const task = await DBService.getInstance().getConnection().getRepository(Task).findOne(TestingLib.TEST_TASK);

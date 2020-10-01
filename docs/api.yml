@@ -85,6 +85,56 @@ paths:
           description: Internal Server Error
       tags:
         - tasks
+  /v1/tasks/{id}/{direction}:
+    put:
+      security:
+        - BearerAuth: []
+      operationId: moveTask
+      parameters:
+        - name: id
+          in: path
+          description: task id
+          required: true
+          schema:
+            type: string
+            example: TAtesting
+        - name: direction
+          in: path
+          description: should be forward or backward
+          required: true
+          schema:
+            type: string
+            enum: [forward, backward]
+            example: forward
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoveTaskResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+        '409':
+          description: Cannot forward or backward any more.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictResponse'
+        '500':
+          description: Internal Server Error
+      tags:
+        - tasks
 components:
   securitySchemes:
     BearerAuth:            
@@ -129,6 +179,11 @@ components:
         error:
           type: string
           example: FORBIDDEN
+    ConflictResponse:
+      type: object
+      properties:
+        error:
+          type: string
     UnprocessableEntityResponse:
       type: object
       properties:
@@ -191,6 +246,22 @@ components:
         updatedAt:  
           type: string
           example: '2020-09-30T21:24:57.148Z'
+    MoveTaskResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MoveTaskResponseInData'
+    MoveTaskResponseInData:
+      type: object
+      properties:
+        id: 
+          type: string
+          description: new status id
+          example: 'KS9ad1e11c-25b9-471c-bbfc-b525a26313f5'
+        name:  
+          type: string
+          description: new status name
+          example: 'KSnew'
     LoginUser:
       type: object
       properties:

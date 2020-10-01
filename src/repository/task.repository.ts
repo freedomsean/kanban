@@ -118,11 +118,12 @@ export class TaskRepository {
             }
           });
 
-          const currentStatus = await transactionalEntityManager.findOneOrFail(KanbanStatus, {
+          const currentStatus = await transactionalEntityManager.getRepository(KanbanStatus).findOneOrFail({
             where: {
               id: task.status,
               isDeleted: false
-            }
+            },
+            select: ['order']
           });
 
           const newStatus = await transactionalEntityManager.findOneOrFail(KanbanStatus, {

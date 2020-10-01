@@ -129,4 +129,15 @@ export class TestingLib {
       id: TestingLib.TEST_USER
     });
   }
+
+  static async changeTaskStatus(statusIndex: number) {
+    await DBService.getInstance().getConnection().getRepository(Task).update(
+      {
+        id: TestingLib.TEST_TASK
+      },
+      {
+        status: TestingLib.TEST_KANBAN_STATUS[statusIndex].id
+      }
+    );
+  }
 }

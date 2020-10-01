@@ -7,7 +7,7 @@ import { ValidateBodyMiddleware } from '../middleware/validate-body.middleware';
 
 const task: Router = Router();
 
-task.put('/:id/:direction', AuthMiddleware, AuthController.login);
+task.put('/:id/:direction(backward|forward)', AuthMiddleware, TaskController.moveTask);
 task.delete('/:id', AuthMiddleware, AuthController.login);
 task.post(
   '/',
