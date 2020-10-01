@@ -1,6 +1,8 @@
+import { DBService } from './db.service';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import * as jwt from 'jsonwebtoken';
 import { Env } from '../constant/env.constant';
+import { User } from '../model/user.model';
 
 const signOptions: jwt.SignOptions = {
   expiresIn: Env.JWT_EXPIRES_IN
@@ -32,7 +34,15 @@ export class PassportService {
     passport.use(
       new Strategy(opts, async (jwtPayload, done) => {
         try {
-          const user = true;
+          const user = await DBService.getInstance()
+            .getConnection()
+            .getRepository(User)
+            .findOne(jwtPayload.sub, {
+              select: ['id', 'username'],
+              where: {
+                isDeleted: false
+              }
+            });
 
           if (user) {
             return done(null, user);
