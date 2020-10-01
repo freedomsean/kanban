@@ -9,7 +9,7 @@ This is a Kanban board example which is developed by NodeJS and Typescript.
 ## How to Start
 
 1. Setup `database` and `fluentd` by `docker-compose up -d`.
-2. Add `.env` file into project directory. and follow [Env Setting](#Set%20Env%20File) to add variables.
+2. Add `.env` file into project directory. and follow [Env Setting](#set-env-file) to add variables.
 3. Install `NodeJS`, if you do not have.
 4. Run `yarn install`, if you do not have yarn, you should run `npm install -g yarn` first.
 5. Run `npm run sync` to synchronize database schema.
