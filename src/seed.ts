@@ -5,7 +5,7 @@ const args = process.argv.slice(2);
 if (args[0] === 'up') {
   (async () => {
     await TestingLib.connectToDB();
-    await TestingLib.createTestKanban();
+    await TestingLib.createTestTask();
     await TestingLib.closeDBConnection();
   })();
 } else {
