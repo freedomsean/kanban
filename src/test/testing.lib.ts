@@ -25,6 +25,8 @@ export class TestingLib {
   static readonly TEST_TASK = UUIDType.TASK + 'testing';
   static readonly NOT_EXISTED_TEST_TASK = UUIDType.TASK + 'not_existed';
 
+  static readonly TEST_NEW_TASK = UUIDType.TASK + 'new';
+
   static async connectToDB() {
     await DBService.getInstance().init({
       dialect: Env.DB_DIALECT,

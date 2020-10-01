@@ -4,5 +4,6 @@ export const LoginRequiredField = {
 };
 
 export const CreateTaskRequiredField = {
-  NAME: 'name'
+  NAME: 'name',
+  KANBAN_ID: 'kanbanId'
 };

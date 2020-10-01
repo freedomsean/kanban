@@ -1,3 +1,6 @@
+import { HttpStatusCode } from './../constant/response-msg.constant';
+import { TestingLib } from './testing.lib';
+import * as supertest from 'supertest';
 import * as http from 'http';
 
 export class ApiTestingLib {
@@ -17,5 +20,16 @@ export class ApiTestingLib {
         resolve();
       });
     });
+  }
+
+  static async login(main: any): Promise<string> {
+    const testing = await supertest(main.app)
+      .post('/v1/auth/login')
+      .send({
+        username: TestingLib.TEST_USER,
+        password: TestingLib.TEST_USER
+      })
+      .expect(HttpStatusCode.OK);
+    return testing.body.data.token;
   }
 }

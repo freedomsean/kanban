@@ -1,13 +1,15 @@
 openapi: 3.0.0
 info:
-  title: Swype Customer Backend
-  description: Swype Customer Backend
+  title: Kanban
+  description: Kanban
   version: "1.0.0-oas3"
 tags:
   - name: auth
     description: 'auth'
+  - name: tasks
+    description: 'tasks'
 paths:
-  /auth/login:
+  /v1/auth/login:
     post:
       operationId: login
       parameters: []
@@ -41,15 +43,54 @@ paths:
           description: Internal Server Error
       tags:
         - auth
+  /v1/tasks:
+    post:
+      security:
+        - BearerAuth: []
+      operationId: createTask
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTaskResponse'
+ 
+        '422':
+          description: Unprocessible Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableEntityResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+        '500':
+          description: Internal Server Error
+      tags:
+        - tasks
 components:
   securitySchemes:
-    basic:
+    BearerAuth:            
       type: http
-      scheme: basic
-    bearer:
       scheme: bearer
-      bearerFormat: JWT
-      type: http
+      bearerFormat: JWT 
   schemas:
     AuthDto:
       type: object
@@ -58,6 +99,18 @@ components:
           type: string
         password:
           type: string
+      required:
+        - username
+        - password
+    CreateTaskDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: new
+        kanbanId:
+          type: string
+          example: KAtesting
       required:
         - username
         - password
@@ -70,6 +123,12 @@ components:
         error:
           type: string
           example: UNAUTHORIZED
+    ForbiddenResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: FORBIDDEN
     UnprocessableEntityResponse:
       type: object
       properties:
@@ -81,6 +140,11 @@ components:
     UnprocessableErrorDetails:
       type: object
     LoginResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/LoginResponseInData'
+    LoginResponseInData:
       type: object
       properties:
         token:
@@ -95,6 +159,38 @@ components:
           $ref: '#/components/schemas/Kanbans'
         user:
           $ref: '#/components/schemas/LoginUser'
+    CreateTaskResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CreateTaskResponseInData'
+    CreateTaskResponseInData:
+      type: object
+      properties:
+        id: 
+          type: string
+          example: 'TA9ad1e11c-25b9-471c-bbfc-b525a26313f5'
+        lastModified:  
+          type: string
+          example: 'UStesting'
+        name:  
+          type: string
+          example: 'TAnew'
+        kanbanId:  
+          type: string
+          example: 'KAtesting'
+        status:  
+          type: string
+          example: 'KStesting1'
+        isDeleted:  
+          type: boolean
+          example: false
+        createdAt:  
+          type: string
+          example: '2020-09-30T21:24:57.148Z'
+        updatedAt:  
+          type: string
+          example: '2020-09-30T21:24:57.148Z'
     LoginUser:
       type: object
       properties:
@@ -114,8 +210,3 @@ components:
         id:
           type: string
           example: KAfe68d06f-1bd6-497b-bfe4-b8b344fb4f9e
-      
-# Added by API Auto Mocking Plugin
-servers:
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/swype-cbnest/cbnest/1.0.0-oas3
