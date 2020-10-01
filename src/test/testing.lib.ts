@@ -9,21 +9,21 @@ import { Kanban } from '../model/kanban.model';
 import { UserKanban } from '../model/user-kanban.model';
 
 export class TestingLib {
-  static readonly TEST_USER = UUIDType.User + 'testing';
-  static readonly NOT_EXISTED_TEST_USER = UUIDType.User + 'not_existed';
+  static readonly TEST_USER = UUIDType.USER + 'testing';
+  static readonly NOT_EXISTED_TEST_USER = UUIDType.USER + 'not_existed';
 
-  static readonly TEST_KANBAN = UUIDType.Kanban + 'testing';
-  static readonly NOT_EXISTED_TEST_KANBAN = UUIDType.Kanban + 'not_existed';
+  static readonly TEST_KANBAN = UUIDType.KANBAN + 'testing';
+  static readonly NOT_EXISTED_TEST_KANBAN = UUIDType.KANBAN + 'not_existed';
 
   static readonly TEST_KANBAN_STATUS: { id: string; name: string }[] = [
-    { id: UUIDType.KanbanStatus + 'testing1', name: 'Backlog' },
-    { id: UUIDType.KanbanStatus + 'testing2', name: 'To Do' },
-    { id: UUIDType.KanbanStatus + 'testing3', name: 'Ongoing' },
-    { id: UUIDType.KanbanStatus + 'testing4', name: 'Done' }
+    { id: UUIDType.KANBANSTATUS + 'testing1', name: 'Backlog' },
+    { id: UUIDType.KANBANSTATUS + 'testing2', name: 'To Do' },
+    { id: UUIDType.KANBANSTATUS + 'testing3', name: 'Ongoing' },
+    { id: UUIDType.KANBANSTATUS + 'testing4', name: 'Done' }
   ];
 
-  static readonly TEST_TASK = UUIDType.Task + 'testing';
-  static readonly NOT_EXISTED_TEST_TASK = UUIDType.Task + 'not_existed';
+  static readonly TEST_TASK = UUIDType.TASK + 'testing';
+  static readonly NOT_EXISTED_TEST_TASK = UUIDType.TASK + 'not_existed';
 
   static async connectToDB() {
     await DBService.getInstance().init({
@@ -78,6 +78,15 @@ export class TestingLib {
       userId: TestingLib.TEST_USER,
       type: 'admin'
     });
+
+    await DBService.getInstance().getConnection().getRepository(User).update(
+      {
+        id: TestingLib.TEST_USER
+      },
+      {
+        defaultKanbanId: TestingLib.TEST_KANBAN
+      }
+    );
   }
 
   static async createTestTask() {

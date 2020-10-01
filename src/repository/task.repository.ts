@@ -45,7 +45,7 @@ export class TaskRepository {
    */
   static async createTask(name: string, userId: string, kanbanId: string): Promise<Task | undefined> {
     const task = new Task();
-    task.id = UUIDService.generateUniqueId(UUIDType.Task);
+    task.id = UUIDService.generateUniqueId(UUIDType.TASK);
     task.lastModified = userId;
     task.name = name;
     task.kanbanId = kanbanId;
@@ -88,8 +88,13 @@ export class TaskRepository {
    *
    * @param {string} id - Task id.
    * @param {string} direction - It can be forward or backward.
+   * @param {string} userId - User id.
    */
-  static async moveTask(id: string, direction: 'forward' | 'backward'): Promise<KanbanStatus | undefined> {
+  static async moveTask(
+    id: string,
+    direction: 'forward' | 'backward',
+    userId: string
+  ): Promise<KanbanStatus | undefined> {
     const isForward = direction === 'forward';
 
     try {
@@ -102,6 +107,15 @@ export class TaskRepository {
               isDeleted: false
             },
             select: ['status', 'kanbanId']
+          });
+
+          await transactionalEntityManager.getRepository(UserKanban).findOneOrFail({
+            select: ['userId', 'kanbanId'],
+            where: {
+              userId,
+              kanbanId: task.kanbanId,
+              isDeleted: false
+            }
           });
 
           const currentStatus = await transactionalEntityManager.findOneOrFail(KanbanStatus, {
@@ -129,7 +143,9 @@ export class TaskRepository {
               id
             },
             {
-              status: newStatus.id
+              status: newStatus.id,
+              lastModified: userId,
+              updatedAt: new Date()
             }
           );
 
@@ -147,6 +163,10 @@ export class TaskRepository {
 
       if (error.toString().startsWith(`EntityNotFound: Could not find any entity of type "Task" matching`)) {
         throw new TaskNotExistError();
+      }
+
+      if (error.toString().startsWith(`EntityNotFound: Could not find any entity of type "UserKanban" matching`)) {
+        throw new TaskPermissionDeniedError();
       }
 
       return undefined;
@@ -185,7 +205,9 @@ export class TaskRepository {
         id
       },
       {
-        isDeleted: true
+        isDeleted: true,
+        lastModified: userId,
+        updatedAt: new Date()
       }
     );
   }
