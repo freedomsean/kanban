@@ -6,8 +6,7 @@ import {
   TaskCannotBackwardError,
   TaskNotExistError,
   TaskPermissionDeniedError,
-  NoKanbanStatusError,
-  TaskNameDuplicatedError
+  NoKanbanStatusError
 } from './../../exception/task.exception';
 import { TaskRepository } from './../../repository/task.repository';
 import { DBService } from './../../service/db.service';
@@ -56,18 +55,6 @@ describe('Test TaskRepository', () => {
         name: TestingLib.TEST_TASK
       });
       expect(result).toBeTruthy();
-    });
-
-    test('duplicated task name', async () => {
-      const task = await TaskRepository.createTask(TestingLib.TEST_TASK, TestingLib.TEST_USER, TestingLib.TEST_KANBAN);
-      expect(task).toBeTruthy();
-      const result = await DBService.getInstance().getConnection().getRepository(Task).findOne({
-        name: TestingLib.TEST_TASK
-      });
-      expect(result).toBeTruthy();
-      await expect(
-        TaskRepository.createTask(TestingLib.TEST_TASK, TestingLib.TEST_USER, TestingLib.TEST_KANBAN)
-      ).rejects.toThrowError(TaskNameDuplicatedError);
     });
 
     test('kanban not existed, should be failed', async () => {

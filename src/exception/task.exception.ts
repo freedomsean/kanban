@@ -7,15 +7,6 @@ export class NoKanbanStatusError extends Error {
   }
 }
 
-export class TaskNameDuplicatedError extends Error {
-  constructor() {
-    super(`Duplicated task name.`);
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
-    Object.setPrototypeOf(this, TaskNameDuplicatedError.prototype);
-  }
-}
-
 export class TaskCannotForwardError extends Error {
   constructor() {
     super(`Task cannot forward any more.`);

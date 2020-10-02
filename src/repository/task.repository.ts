@@ -6,8 +6,7 @@ import {
   TaskCannotBackwardError,
   TaskCannotForwardError,
   TaskNotExistError,
-  TaskPermissionDeniedError,
-  TaskNameDuplicatedError
+  TaskPermissionDeniedError
 } from './../exception/task.exception';
 import { KanbanStatus } from './../model/kanban-status.model';
 import { UserKanban } from './../model/user-kanban.model';
@@ -111,11 +110,6 @@ export class TaskRepository {
       if (error.toString().startsWith(`EntityNotFound: Could not find any entity of type "KanbanStatus" matching`)) {
         throw new NoKanbanStatusError();
       }
-
-      if (error.message.startsWith(`duplicate key value violates unique constraint`)) {
-        throw new TaskNameDuplicatedError();
-      }
-
       throw error;
     }
   }

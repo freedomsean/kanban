@@ -3,8 +3,7 @@ import {
   NoKanbanStatusError,
   TaskCannotBackwardError,
   TaskCannotForwardError,
-  TaskNotExistError,
-  TaskNameDuplicatedError
+  TaskNotExistError
 } from './../exception/task.exception';
 import { HttpStatusCode } from './../constant/response-msg.constant';
 import {
@@ -31,7 +30,7 @@ export class TaskController {
         return;
       }
 
-      if (error instanceof NoKanbanStatusError || error instanceof TaskNameDuplicatedError) {
+      if (error instanceof NoKanbanStatusError) {
         next(new HttpConflictResponse(error.toString()));
         return;
       }
