@@ -1,4 +1,3 @@
-import { ENV_TEST_MODE, Env } from '../constant/env.constant';
 import { LoggerService } from '../service/logger.service';
 import { Request, Response, NextFunction } from 'express';
 import { HttpResponse } from './http-response';
@@ -13,9 +12,14 @@ import { HttpResponse } from './http-response';
  */
 export function ErrorHandler(data: any, req: Request, res: Response, next: NextFunction) {
   if (data instanceof HttpResponse) {
-    if (Env.NODE_ENV !== ENV_TEST_MODE) {
-      LoggerService.getInstance().info({});
-    }
+    LoggerService.getInstance().info({
+      path: req.path,
+      user: req.user,
+      params: req.params,
+      query: req.query,
+      body: req.body,
+      response: data
+    });
     res.status(data.statusCode).json(data.toJson());
   } else {
     res.json(data);
