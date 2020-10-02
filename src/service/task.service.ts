@@ -1,3 +1,10 @@
+import {
+  EMAIL_QUEUE_NAME,
+  NOTIFICATION_ACTION_CREATE,
+  NOTIFICATION_ACTION_MOVE,
+  NOTIFICATION_ACTION_DELETE
+} from './../constant/notification.constant';
+import { AMQPService } from './amqp.service';
 import { KanbanStatus } from './../model/kanban-status.model';
 import { Task } from './../model/task.model';
 import { TaskRepository } from '../repository/task.repository';
@@ -11,7 +18,17 @@ export class TaskService {
    * @param {string} kanbanId - Kanban id.
    */
   static async createTask(name: string, userId: string, kanbanId: string): Promise<Task | undefined> {
-    return await TaskRepository.createTask(name, userId, kanbanId);
+    const task = await TaskRepository.createTask(name, userId, kanbanId);
+    console.log(task);
+    if (task) {
+      await AMQPService.getInstance().publish(EMAIL_QUEUE_NAME, {
+        action: NOTIFICATION_ACTION_CREATE,
+        id: task?.id,
+        userId,
+        kanbanId
+      });
+    }
+    return task;
   }
 
   /**
@@ -26,7 +43,18 @@ export class TaskService {
     direction: 'forward' | 'backward',
     userId: string
   ): Promise<KanbanStatus | undefined> {
-    return await TaskRepository.moveTask(id, direction, userId);
+    const status = await TaskRepository.moveTask(id, direction, userId);
+    if (status) {
+      await AMQPService.getInstance().publish(EMAIL_QUEUE_NAME, {
+        action: NOTIFICATION_ACTION_MOVE,
+        taskId: id,
+        direction,
+        newStatus: status,
+        userId
+      });
+    }
+
+    return status;
   }
 
   /**
@@ -37,6 +65,11 @@ export class TaskService {
    */
   static async deleteTask(id: string, userId: string) {
     await TaskRepository.deleteTask(id, userId);
+    await AMQPService.getInstance().publish(EMAIL_QUEUE_NAME, {
+      action: NOTIFICATION_ACTION_DELETE,
+      taskId: id,
+      userId
+    });
   }
 
   /**

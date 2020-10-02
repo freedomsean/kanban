@@ -7,15 +7,23 @@ services:
       POSTGRES_DB: oneconnector
     ports:
       - 5435:5432
-  # dbadmin:
-  #   image: dpage/pgadmin4
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: testing@testing.com
-  #     PGADMIN_DEFAULT_PASSWORD: testing
-  #   ports:
-  #     - 8080:80
-  #   links:
-  #     - db:db
+  rabbitmq:
+    image: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: testing
+      RABBITMQ_DEFAULT_PASS: testing
+      POSTGRES_DB: oneconnector
+    ports:
+      - 5435:5432
+  dbadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: testing@testing.com
+      PGADMIN_DEFAULT_PASSWORD: testing
+    ports:
+      - 8080:80
+    links:
+      - db:db
   fluentd:
     image: fluent/fluentd
     entrypoint: ["fluentd", "-c", "/etc/fluent/fluent.conf", "-vv"]

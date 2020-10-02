@@ -80,7 +80,6 @@ export class TaskRepository {
       if (error.toString().startsWith(`EntityNotFound: Could not find any entity of type "KanbanStatus" matching`)) {
         throw new NoKanbanStatusError();
       }
-
       if (error.message.startsWith(`duplicate key value violates unique constraint`)) {
         throw new TaskNameDuplicatedError();
       }

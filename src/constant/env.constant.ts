@@ -18,6 +18,13 @@ const DB_USED_DATABASE = 'DB_USED_DATABASE';
 const DB_POOL_MAX_CONNECTION = 'DB_POOL_MAX_CONNECTION';
 const DB_SYNC = 'DB_SYNC';
 
+// AMQP Config
+const AMQP_PROTOCOL = 'AMQP_PROTOCOL';
+const AMQP_HOST = 'AMQP_HOST';
+const AMQP_PORT = 'AMQP_PORT';
+const AMQP_USER = 'AMQP_USER';
+const AMQP_PASSWORD = 'AMQP_PASSWORD';
+
 // Auth Config
 const JWT_SECRET = 'JWT_SECRET';
 const SALT_ROUNDS = 'SALT_ROUNDS';
@@ -41,6 +48,14 @@ interface DBConfig {
   DB_SYNC: boolean;
 }
 
+interface AMQPConfig {
+  AMQP_PROTOCOL: string;
+  AMQP_HOST: string;
+  AMQP_PORT: number;
+  AMQP_USER: string;
+  AMQP_PASSWORD: string;
+}
+
 interface AuthConfig {
   JWT_SECRET: string;
   JWT_EXPIRES_IN: string;
@@ -55,7 +70,7 @@ interface FluentdConfig {
   FLUENTD_TAG: string;
 }
 
-export interface EnvObj extends DBConfig, AuthConfig, FluentdConfig {
+export interface EnvObj extends DBConfig, AuthConfig, FluentdConfig, AMQPConfig {
   NODE_ENV: string;
   HTTP_SERVER_PORT: number;
 }
@@ -74,6 +89,11 @@ export const Env: EnvObj = {
   [DB_USED_DATABASE]: EnvUtil.getEnv(DB_USED_DATABASE),
   [DB_POOL_MAX_CONNECTION]: parseInt(EnvUtil.getEnv(DB_POOL_MAX_CONNECTION)),
   [DB_SYNC]: EnvUtil.getEnv(DB_SYNC) === 'true' && EnvUtil.getEnv(NODE_ENV) !== ENV_PRODUCTION_MODE,
+  [AMQP_PROTOCOL]: EnvUtil.getEnv(AMQP_PROTOCOL),
+  [AMQP_HOST]: EnvUtil.getEnv(AMQP_HOST),
+  [AMQP_PORT]: parseInt(EnvUtil.getEnv(AMQP_PORT)),
+  [AMQP_USER]: EnvUtil.getEnv(AMQP_USER),
+  [AMQP_PASSWORD]: EnvUtil.getEnv(AMQP_PASSWORD),
   [JWT_SECRET]: EnvUtil.getEnv(JWT_SECRET),
   [JWT_EXPIRES_IN]: EnvUtil.getEnv(JWT_EXPIRES_IN),
   [SALT_ROUNDS]: parseInt(EnvUtil.getEnv(SALT_ROUNDS)),

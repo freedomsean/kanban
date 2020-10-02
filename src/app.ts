@@ -1,3 +1,4 @@
+import { AMQPService } from './service/amqp.service';
 import { DBService } from './service/db.service';
 import { LoggerService } from './service/logger.service';
 import * as express from 'express';
@@ -24,6 +25,23 @@ import { v1 } from './route/v1';
     });
   } catch (error) {
     LoggerService.getInstance().error(`Database cannot be connected.` + error.toString());
+
+    // Force to stop the current process.
+    process.exit(22);
+  }
+})();
+
+(async () => {
+  try {
+    await AMQPService.getInstance().init({
+      protocol: Env.AMQP_PROTOCOL,
+      host: Env.AMQP_HOST,
+      port: Env.AMQP_PORT,
+      user: Env.AMQP_USER,
+      password: Env.AMQP_PASSWORD
+    });
+  } catch (error) {
+    LoggerService.getInstance().error(`AMQP cannot be connected.` + error.toString());
 
     // Force to stop the current process.
     process.exit(22);
@@ -64,6 +82,7 @@ const server = app.listen(Env.HTTP_SERVER_PORT, () => {
 process.on('SIGTERM', () => {
   server.close(() => {
     DBService.getInstance().closeConnection();
+    AMQPService.getInstance().closeConnection();
     LoggerService.getInstance().end();
   });
 });
