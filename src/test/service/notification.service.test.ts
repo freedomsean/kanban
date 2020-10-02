@@ -32,7 +32,12 @@ describe('Test NotificationService', () => {
       const direction = 'forward';
       const fn = MockLib.mockTaskServiceMoveTaskPublish(direction);
       MockLib.mockAMQPServicePublish(fn);
-      await NotificationService.moveTask(TestingLib.TEST_TASK, direction, TestingLib.TEST_USER);
+      await NotificationService.moveTask(
+        TestingLib.TEST_TASK,
+        direction,
+        TestingLib.TEST_USER,
+        TestingLib.TEST_KANBAN_STATUS[1].id
+      );
       expect(fn).toBeCalledTimes(1);
       MockLib.restoreAllMocks();
     });

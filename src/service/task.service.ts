@@ -33,7 +33,7 @@ export class TaskService {
   ): Promise<KanbanStatus | undefined> {
     const status = await TaskRepository.moveTask(id, direction, userId);
     if (status) {
-      await NotificationService.moveTask(id, direction, userId);
+      await NotificationService.moveTask(id, direction, userId, status.id);
     }
 
     return status;

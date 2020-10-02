@@ -206,7 +206,6 @@ export class TaskRepository {
       if (error.toString().startsWith(`EntityNotFound: Could not find any entity of type "UserKanban" matching`)) {
         throw new TaskPermissionDeniedError();
       }
-
       throw error;
     }
   }

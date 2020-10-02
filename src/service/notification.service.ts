@@ -34,14 +34,15 @@ export class NotificationService {
    * @param {string} id - Task id.
    * @param {string} direction - It can be forward or backward.
    * @param {string} userId - User id.
+   * @param {string} newStatus - New status id.
    */
-  static async moveTask(id: string, direction: 'forward' | 'backward', userId: string) {
+  static async moveTask(id: string, direction: 'forward' | 'backward', userId: string, newStatus: String) {
     const emails = await TaskRepository.getAdminEmailsByTaskId(id);
     await AMQPService.getInstance().publish(EMAIL_QUEUE_NAME, {
       action: NOTIFICATION_ACTION_MOVE,
       taskId: id,
       direction,
-      newStatus: status,
+      newStatus,
       userId,
       emails
     });

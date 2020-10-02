@@ -8,7 +8,7 @@ export class Task extends BaseEntity {
   @PrimaryColumn({ length: 38 })
   id: string;
 
-  @Column({ length: 50, unique: true, nullable: false })
+  @Column({ length: 50, nullable: false })
   name: string;
 
   @ManyToOne((type) => Kanban, (kanban) => kanban.statuses)
