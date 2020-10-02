@@ -1,0 +1,17 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: testing
+      POSTGRES_DB: oneconnector
+    ports:
+      - 5435:5432
+  fluentd:
+    image: fluent/fluentd
+    entrypoint: ["fluentd", "-c", "/etc/fluent/fluent.conf", "-vv"]
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    volumes:
+      - "./fluentd/fluent.conf:/etc/fluent/fluent.conf"
