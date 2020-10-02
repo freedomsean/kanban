@@ -15,15 +15,6 @@ services:
       RABBITMQ_VHOST: oneconnector
     ports:
       - 5679:5672
-  dbadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: testing@testing.com
-      PGADMIN_DEFAULT_PASSWORD: testing
-    ports:
-      - 8080:80
-    links:
-      - db:db
   fluentd:
     image: fluent/fluentd
     entrypoint: ["fluentd", "-c", "/etc/fluent/fluent.conf", "-vv"]
