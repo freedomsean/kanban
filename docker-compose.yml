@@ -8,13 +8,13 @@ services:
     ports:
       - 5435:5432
   rabbitmq:
-    image: rabbitmq
+    image: bitnami/rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: testing
-      RABBITMQ_DEFAULT_PASS: testing
-      POSTGRES_DB: oneconnector
+      RABBITMQ_USERNAME: testing
+      RABBITMQ_PASSWORD: testing
+      RABBITMQ_VHOST: oneconnector
     ports:
-      - 5435:5432
+      - 5679:5672
   dbadmin:
     image: dpage/pgadmin4
     environment:

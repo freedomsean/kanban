@@ -41,7 +41,8 @@ password: UStesting
 ### Other component
 
 - Postgres
-- Fluentd
+- Fluentd: Write log to somewhere which depends on its setting.
+- Rabbitmq: To send the event and message to the broker for its consumer to do email.
 
 You can reference the config in `fluentd/fluent.conf`, if you need to setup in the virtual machine.
 
@@ -76,6 +77,14 @@ DB_PASSWORD=
 DB_USED_DATABASE=
 DB_POOL_MAX_CONNECTION=     # Database connection pool size
 DB_SYNC=                    # Always be false when your NODE_ENV is production. If you want to change schema in the production, please find DBA or do it manually.
+
+# amqp
+AMQP_PROTOCOL=
+AMQP_HOST=
+AMQP_PORT=
+AMQP_USER=
+AMQP_PASSWORD=
+AMQP_VHOST=
 
 # jwt
 JWT_SECRET=
