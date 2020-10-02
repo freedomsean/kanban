@@ -1,3 +1,4 @@
+import { MockLib } from './../mock.lib';
 import { DBMissingInitError, DBService } from './../../service/db.service';
 import * as typeorm from 'typeorm';
 
@@ -27,7 +28,7 @@ describe('Test DBService', () => {
       });
 
       expect(DBService.getInstance().getConnection()).toBeTruthy();
-      jest.restoreAllMocks();
+      MockLib.restoreAllMocks();
     });
   });
 });

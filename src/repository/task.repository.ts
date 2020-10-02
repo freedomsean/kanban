@@ -16,6 +16,37 @@ import { UUIDService, UUIDType } from './../service/uuid.service';
 
 export class TaskRepository {
   /**
+   * Get admin's emails by task id.
+   *
+   * @param {string} taskId - Task id.
+   */
+  static async getAdminEmailsByTaskId(taskId: string): Promise<string[]> {
+    const task = await DBService.getInstance()
+      .getConnection()
+      .getRepository(Task)
+      .findOneOrFail({
+        select: ['kanbanId'],
+        where: {
+          // It cannot add isDeleted: false, because deleting task will change that.
+          id: taskId
+        }
+      });
+
+    const usersKanbans = await DBService.getInstance()
+      .getConnection()
+      .getRepository(UserKanban)
+      .find({
+        where: {
+          kanbanId: task.kanbanId,
+          isDeleted: false
+        },
+        relations: ['user']
+      });
+
+    return usersKanbans.filter((ele) => ele.type === 'admin').map((ele) => ele.user.email);
+  }
+
+  /**
    * Check relation between user with kanban.
    *
    * @param {string} userId - User id.

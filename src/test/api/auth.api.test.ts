@@ -1,3 +1,4 @@
+import { MockLib } from './../mock.lib';
 import { TOKEN_TYPE_BEARER } from './../../constant/token.constant';
 import * as jwt from 'jsonwebtoken';
 import * as supertest from 'supertest';
@@ -10,12 +11,14 @@ import { HttpStatusCode } from './../../constant/response-msg.constant';
 describe('Test Auth API', () => {
   let main: { app: any; server: any };
   beforeEach(async () => {
+    MockLib.mockAMQPServiceInit();
     await TestingLib.connectToDB();
     await TestingLib.createTestKanban();
     main = await ApiTestingLib.startHttpServer();
   });
 
   afterEach(async () => {
+    MockLib.restoreAllMocks();
     await ApiTestingLib.closeHttpServer(main.server);
     await TestingLib.deleteTestUser();
     await TestingLib.closeDBConnection();

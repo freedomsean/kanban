@@ -194,4 +194,22 @@ describe('Test TaskRepository', () => {
       ).rejects.toThrowError(TaskPermissionDeniedError);
     });
   });
+
+  describe('Test getAdminMailsByTaskId', () => {
+    beforeEach(async () => {
+      await TestingLib.connectToDB();
+      await TestingLib.createTestTask();
+    });
+
+    afterEach(async () => {
+      await TestingLib.deleteTestUser();
+      await TestingLib.closeDBConnection();
+    });
+
+    test('happy path', async () => {
+      const emails = await TaskRepository.getAdminEmailsByTaskId(TestingLib.TEST_TASK);
+      expect(emails.length).toBe(1);
+      expect(emails[0]).toBe(TestingLib.TEST_USER_EMAIL);
+    });
+  });
 });

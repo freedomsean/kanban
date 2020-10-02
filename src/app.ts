@@ -38,11 +38,11 @@ import { v1 } from './route/v1';
       host: Env.AMQP_HOST,
       port: Env.AMQP_PORT,
       user: Env.AMQP_USER,
+      vhost: Env.AMQP_VHOST,
       password: Env.AMQP_PASSWORD
     });
   } catch (error) {
     LoggerService.getInstance().error(`AMQP cannot be connected.` + error.toString());
-
     // Force to stop the current process.
     process.exit(22);
   }

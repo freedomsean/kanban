@@ -1,3 +1,4 @@
+import { MockLib } from './../mock.lib';
 import * as supertest from 'supertest';
 
 import { HttpStatusCode } from './../../constant/response-msg.constant';
@@ -9,6 +10,7 @@ describe('Test Kanban API', () => {
   let main: { app: any; server: any };
   let token = '';
   beforeEach(async () => {
+    MockLib.mockAMQPServiceInit();
     await TestingLib.connectToDB();
     await TestingLib.createTestTask();
     main = await ApiTestingLib.startHttpServer();
@@ -16,6 +18,7 @@ describe('Test Kanban API', () => {
   });
 
   afterEach(async () => {
+    MockLib.restoreAllMocks();
     await ApiTestingLib.closeHttpServer(main.server);
     await TestingLib.deleteTestUser();
     await TestingLib.closeDBConnection();

@@ -1,3 +1,4 @@
+import { MockLib } from './../mock.lib';
 import { Task } from './../../model/task.model';
 import { DBService } from './../../service/db.service';
 import { TOKEN_TYPE_BEARER } from './../../constant/token.constant';
@@ -11,6 +12,8 @@ describe('Test Task API', () => {
   let main: { app: any; server: any };
   let token = '';
   beforeEach(async () => {
+    MockLib.mockAMQPServiceInit();
+    MockLib.mockNotificationServiceCreateTask();
     await TestingLib.connectToDB();
     await TestingLib.createTestTask();
     main = await ApiTestingLib.startHttpServer();
@@ -18,6 +21,7 @@ describe('Test Task API', () => {
   });
 
   afterEach(async () => {
+    MockLib.restoreAllMocks();
     await ApiTestingLib.closeHttpServer(main.server);
     await TestingLib.deleteTestUser();
     await TestingLib.closeDBConnection();

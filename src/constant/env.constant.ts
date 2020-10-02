@@ -24,6 +24,7 @@ const AMQP_HOST = 'AMQP_HOST';
 const AMQP_PORT = 'AMQP_PORT';
 const AMQP_USER = 'AMQP_USER';
 const AMQP_PASSWORD = 'AMQP_PASSWORD';
+const AMQP_VHOST = 'AMQP_VHOST';
 
 // Auth Config
 const JWT_SECRET = 'JWT_SECRET';
@@ -54,6 +55,7 @@ interface AMQPConfig {
   AMQP_PORT: number;
   AMQP_USER: string;
   AMQP_PASSWORD: string;
+  AMQP_VHOST: string;
 }
 
 interface AuthConfig {
@@ -94,6 +96,7 @@ export const Env: EnvObj = {
   [AMQP_PORT]: parseInt(EnvUtil.getEnv(AMQP_PORT)),
   [AMQP_USER]: EnvUtil.getEnv(AMQP_USER),
   [AMQP_PASSWORD]: EnvUtil.getEnv(AMQP_PASSWORD),
+  [AMQP_VHOST]: EnvUtil.getEnv(AMQP_VHOST),
   [JWT_SECRET]: EnvUtil.getEnv(JWT_SECRET),
   [JWT_EXPIRES_IN]: EnvUtil.getEnv(JWT_EXPIRES_IN),
   [SALT_ROUNDS]: parseInt(EnvUtil.getEnv(SALT_ROUNDS)),

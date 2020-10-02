@@ -6,6 +6,16 @@ export interface AMQPConfig {
   port: number;
   user: string;
   password: string;
+  vhost: string;
+}
+
+export class AMQPMissingInitError extends Error {
+  constructor() {
+    super(`AMQPService never init.`);
+    this.name = this.constructor.name;
+    Error.captureStackTrace(this, this.constructor);
+    Object.setPrototypeOf(this, AMQPMissingInitError.prototype);
+  }
 }
 
 export class AMQPService {
@@ -23,14 +33,19 @@ export class AMQPService {
    * Check whether is connected to AMQP.
    */
   hasConnection() {
-    return this.connection && this.channel;
+    return this.connection && this.channel && this.connection;
   }
 
+  /**
+   * Close connection.
+   */
   async closeConnection() {
-    await this.channel.close();
-    await this.connection.close();
-    this.channel = undefined!;
-    this.connection = undefined!;
+    if (this.hasConnection()) {
+      await this.channel.close();
+      await this.connection.close();
+      this.channel = undefined!;
+      this.connection = undefined!;
+    }
   }
 
   /**
@@ -48,9 +63,9 @@ export class AMQPService {
       hostname: config.host,
       port: config.port,
       username: config.user,
-      password: config.password
+      password: config.password,
+      vhost: config.vhost
     });
-
     this.channel = await this.connection.createChannel();
   }
 
@@ -61,6 +76,9 @@ export class AMQPService {
    * @param {any} message - Message.
    */
   async publish(queueName: string, message: any) {
+    if (!this.connection || !this.channel) {
+      throw new AMQPMissingInitError();
+    }
     await this.channel.assertQueue(queueName);
     await this.channel.sendToQueue(queueName, Buffer.from(JSON.stringify(message)));
   }

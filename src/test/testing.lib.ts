@@ -10,6 +10,7 @@ import { UserKanban } from '../model/user-kanban.model';
 
 export class TestingLib {
   static readonly TEST_USER = UUIDType.USER + 'testing';
+  static readonly TEST_USER_EMAIL = 'testing@testing.com';
   static readonly NOT_EXISTED_TEST_USER = UUIDType.USER + 'not_existed';
 
   static readonly TEST_KANBAN = UUIDType.KANBAN + 'testing';
@@ -51,6 +52,7 @@ export class TestingLib {
       .insert({
         id: TestingLib.TEST_USER,
         username: TestingLib.TEST_USER,
+        email: TestingLib.TEST_USER_EMAIL,
         password: PasswordService.generateSecureHash(TestingLib.TEST_USER),
         isDeleted: false
       });

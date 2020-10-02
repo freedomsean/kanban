@@ -1,3 +1,4 @@
+import { MockLib } from './../mock.lib';
 import { LoggerService } from '../../service/logger.service';
 import * as winston from 'winston';
 import { Logger } from 'winston';
@@ -23,7 +24,7 @@ describe('Test LoggerService', () => {
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    MockLib.restoreAllMocks();
   });
 
   test('Test info', () => {
