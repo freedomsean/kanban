@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Run testing
           command: |
-            docker run -it --name app --net app_default  --link app_db_1:db --link app_fluentd_1:fluentd -e HTTP_SERVER_PORT=3000 -e DB_DIALECT=postgres -e DB_HOST=db -e DB_PORT=5432 -e DB_USER=postgres -e DB_PASSWORD=testing -e DB_USED_DATABASE=oneconnector -e DB_POOL_MAX_CONNECTION=10 -e DB_SYNC=true -e JWT_SECRET=sdfgefdfgfdfg -e SALT_ROUNDS=10 -e JWT_EXPIRES_IN=7d -e FLUENTD_HOST=fluentd -e FLUENTD_PORT=24224 -e FLUENTD_TIMEOUT=1 -e FLUENTD_SHARED_KEY=secure_communication_is_awesome -e FLUENTD_TAG=___specialcustomtesttag app
+            docker run -it --name app --net app_default  --link app_db_1:db --link app_rabbitmq_1:rabbitmq --link app_fluentd_1:fluentd -e HTTP_SERVER_PORT=3000 -e DB_DIALECT=postgres -e DB_HOST=db -e DB_PORT=5432 -e DB_USER=postgres -e DB_PASSWORD=testing -e DB_USED_DATABASE=oneconnector -e DB_POOL_MAX_CONNECTION=10 -e DB_SYNC=true -e JWT_SECRET=sdfgefdfgfdfg -e SALT_ROUNDS=10 -e JWT_EXPIRES_IN=7d -e FLUENTD_HOST=fluentd -e FLUENTD_PORT=24224 -e FLUENTD_TIMEOUT=1 -e FLUENTD_SHARED_KEY=secure_communication_is_awesome -e FLUENTD_TAG=___specialcustomtesttag -e AMQP_PROTOCOL=amqp -e AMQP_HOST=rabbitmq -e AMQP_PORT=5672 -e AMQP_USER=testing -e AMQP_PASSWORD=testing -e AMQP_VHOST=oneconnector app
       - run:
           name: Copy coverage
           command: |
